@@ -1,29 +1,45 @@
 
+const FIGURES = {
+  YAMS: 'YAMS',
+  GRANDE_SUITE: 'Grande Suite',
+  CARRE: 'Carré',
+  FULL: 'Full',
+  BRELAN: 'Brelan',
+  CHANCE: 'Chance'
+};
+
+const POINTS = {
+  [FIGURES.YAMS]: 50,
+  [FIGURES.GRANDE_SUITE]: 40,
+  [FIGURES.CARRE]: 35,
+  [FIGURES.FULL]: 30,
+  [FIGURES.BRELAN]: 28
+};
+
 function identifyFigure(dice, usedFigures = []) {
   const counts = countDiceValues(dice);
   
-  if (!usedFigures.includes('YAMS') && hasYams(counts)) {
-    return { figure: 'YAMS', points: 50 };
+  if (!isFigureUsed(FIGURES.YAMS, usedFigures) && hasYams(counts)) {
+    return createFigureResult(FIGURES.YAMS);
   }
   
-  if (!usedFigures.includes('Grande Suite') && hasLargeStraight(dice)) {
-    return { figure: 'Grande Suite', points: 40 };
+  if (!isFigureUsed(FIGURES.GRANDE_SUITE, usedFigures) && hasLargeStraight(dice)) {
+    return createFigureResult(FIGURES.GRANDE_SUITE);
   }
   
-  if (!usedFigures.includes('Carré') && hasFourOfAKind(counts)) {
-    return { figure: 'Carré', points: 35 };
+  if (!isFigureUsed(FIGURES.CARRE, usedFigures) && hasFourOfAKind(counts)) {
+    return createFigureResult(FIGURES.CARRE);
   }
   
-  if (!usedFigures.includes('Full') && hasFull(counts)) {
-    return { figure: 'Full', points: 30 };
+  if (!isFigureUsed(FIGURES.FULL, usedFigures) && hasFull(counts)) {
+    return createFigureResult(FIGURES.FULL);
   }
   
-  if (!usedFigures.includes('Brelan') && hasThreeOfAKind(counts)) {
-    return { figure: 'Brelan', points: 28 };
+  if (!isFigureUsed(FIGURES.BRELAN, usedFigures) && hasThreeOfAKind(counts)) {
+    return createFigureResult(FIGURES.BRELAN);
   }
   
-  const sum = dice.reduce((acc, val) => acc + val, 0);
-  return { figure: 'Chance', points: sum };
+  return createChanceResult(dice);
 }
 
 export function calculateYamsScore(rolls) {
@@ -38,12 +54,33 @@ export function calculateYamsScore(rolls) {
     const result = identifyFigure(roll, usedFigures);
     totalScore += result.points;
     
-    if (result.figure !== 'Chance') {
+    if (shouldTrackFigure(result.figure)) {
       usedFigures.push(result.figure);
     }
   }
   
   return totalScore;
+}
+
+function isFigureUsed(figure, usedFigures) {
+  return usedFigures.includes(figure);
+}
+
+function createFigureResult(figure) {
+  return { figure, points: POINTS[figure] };
+}
+
+function createChanceResult(dice) {
+  const sum = calculateDiceSum(dice);
+  return { figure: FIGURES.CHANCE, points: sum };
+}
+
+function calculateDiceSum(dice) {
+  return dice.reduce((acc, val) => acc + val, 0);
+}
+
+function shouldTrackFigure(figure) {
+  return figure !== FIGURES.CHANCE;
 }
 
 function countDiceValues(dice) {
@@ -55,15 +92,19 @@ function countDiceValues(dice) {
 }
 
 function hasThreeOfAKind(counts) {
-  return Object.values(counts).some(count => count === 3);
+  return hasCountOfKind(counts, 3);
 }
 
 function hasFourOfAKind(counts) {
-  return Object.values(counts).some(count => count === 4);
+  return hasCountOfKind(counts, 4);
 }
 
 function hasYams(counts) {
-  return Object.values(counts).some(count => count === 5);
+  return hasCountOfKind(counts, 5);
+}
+
+function hasCountOfKind(counts, targetCount) {
+  return Object.values(counts).some(count => count === targetCount);
 }
 
 function hasFull(counts) {
@@ -73,9 +114,12 @@ function hasFull(counts) {
 
 function hasLargeStraight(dice) {
   const sorted = [...dice].sort((a, b) => a - b);
-  const straight1 = [1, 2, 3, 4, 5];
-  const straight2 = [2, 3, 4, 5, 6];
+  const validStraights = [
+    [1, 2, 3, 4, 5],
+    [2, 3, 4, 5, 6]
+  ];
   
-  return JSON.stringify(sorted) === JSON.stringify(straight1) ||
-         JSON.stringify(sorted) === JSON.stringify(straight2);
+  return validStraights.some(straight => 
+    JSON.stringify(sorted) === JSON.stringify(straight)
+  );
 }
