@@ -13,4 +13,10 @@ describe('Yams - Identification des figures', () => {
     const result = identifyFigure(dice);
     expect(result).toEqual({ figure: 'Brelan', points: 28 });
   });
+
+   it('devrait identifier un carré', () => {
+    const dice = [4, 4, 4, 4, 1];
+    const result = identifyFigure(dice);
+    expect(result).toEqual({ figure: 'Carré', points: 35 });
+  });
 });
