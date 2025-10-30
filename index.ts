@@ -1,6 +1,10 @@
 export function identifyFigure(dice) {
   const counts = countDiceValues(dice);
   
+  if (hasFourOfAKind(counts)) {
+    return { figure: 'Carré', points: 35 };
+  }
+  
   if (hasThreeOfAKind(counts)) {
     return { figure: 'Brelan', points: 28 };
   }
@@ -19,4 +23,8 @@ function countDiceValues(dice) {
 
 function hasThreeOfAKind(counts) {
   return Object.values(counts).some(count => count === 3);
+}
+
+function hasFourOfAKind(counts) {
+  return Object.values(counts).some(count => count === 4);
 }
