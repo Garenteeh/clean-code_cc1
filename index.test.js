@@ -1,28 +1,26 @@
 import { describe, it, expect } from 'vitest';
-import { identifyFigure } from './index.js';
+import { calculateYamsScore } from './index.js';
 
-describe('Yams - Identification des figures', () => {
-  it('devrait identifier une chance (pas de figure)', () => {
-    const dice = [1, 2, 3, 4, 6];
-    const result = identifyFigure(dice);
-    expect(result).toEqual({ figure: 'Chance', points: 16 });
+describe('Yams', () => {
+  it('devrait calculer le score pour 4 lancers avec différentes figures', () => {
+    const lancers = [
+      [1, 2, 3, 4, 6], // Chance 16
+      [3, 3, 3, 1, 2], // Brelan 28
+      [4, 4, 4, 4, 1], // Carré 35
+      [5, 5, 5, 5, 5]  // YAMS 50
+    ];
+    const result = calculateYamsScore(lancers);
+    expect(result).toBe(129);
   });
 
-  it('devrait identifier un brelan', () => {
-    const dice = [3, 3, 3, 1, 2];
-    const result = identifyFigure(dice);
-    expect(result).toEqual({ figure: 'Brelan', points: 28 });
-  });
-
-  it('devrait identifier un carré', () => {
-    const dice = [4, 4, 4, 4, 1];
-    const result = identifyFigure(dice);
-    expect(result).toEqual({ figure: 'Carré', points: 35 });
-  });
-
-  it('devrait identifier un YAMS', () => {
-    const dice = [5, 5, 5, 5, 5];
-    const result = identifyFigure(dice);
-    expect(result).toEqual({ figure: 'YAMS', points: 50 });
+  it('devrait identifier un Full dans un lancé', () => {
+    const lancers = [
+      [2, 2, 2, 5, 5], // Full 30
+      [1, 2, 3, 4, 6], // Chance 16
+      [3, 3, 3, 1, 2], // Brelan 28
+      [4, 4, 4, 4, 1]  // Carré 35
+    ];
+    const result = calculateYamsScore(lancers);
+    expect(result).toBe(109); 
   });
 });
