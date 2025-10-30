@@ -16,6 +16,12 @@ const POINTS = {
   [FIGURES.BRELAN]: 28
 };
 
+/**
+ * Identifie la meilleure figure possible pour un lancé de dés
+ * @param {number[]} dice - Tableau de 5 dés (valeurs de 1 à 6)
+ * @param {string[]} usedFigures - Figures déjà utilisées (ne peuvent être réutilisées)
+ * @returns {{figure: string, points: number}} La figure identifiée et ses points
+ */
 function identifyFigure(dice, usedFigures = []) {
   const counts = countDiceValues(dice);
   
@@ -42,6 +48,12 @@ function identifyFigure(dice, usedFigures = []) {
   return createChanceResult(dice);
 }
 
+/**
+ * Calcule le score total pour exactement 4 lancers de Yams
+ * Gère automatiquement l'unicité des figures (sauf Chance)
+ * @param {number[][]} rolls - Tableau de 4 lancers (chaque lancé = 5 dés)
+ * @returns {number} Score total
+ */
 export function calculateYamsScore(rolls) {
   if (rolls.length !== 4) {
     throw new Error('Le jeu doit contenir exactement 4 lancers');
