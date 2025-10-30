@@ -1,3 +1,4 @@
 export function identifyFigure(dice) {
-  return ""
+  const sum = dice.reduce((acc, val) => acc + val, 0);
+  return { figure: 'Chance', points: sum };
 }
