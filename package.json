@@ -1,0 +1,22 @@
+{
+  "name": "cc1",
+  "version": "1.0.0",
+  "main": "index.test.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Garenteeh/clean-code_cc1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Garenteeh/clean-code_cc1/issues"
+  },
+  "homepage": "https://github.com/Garenteeh/clean-code_cc1#readme",
+  "description": "",
+  "dependencies": {
+    "vitest": "^3.2.4"
+  }
+}
